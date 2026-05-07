@@ -1,3 +1,4 @@
+import dotenv from "dotenv/config";
 import express from "express";
 import contactsRouter from "./routers/contacts.js";
 import notFoundHandler from "./middlewares/notFoundHandler.js";
