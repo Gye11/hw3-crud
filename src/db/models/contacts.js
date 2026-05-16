@@ -33,6 +33,12 @@ const contactSchema = new mongoose.Schema(
       enum: ["work", "home", "personal"],
       default: "personal",
     },
+
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
+      required: true,
+    },
   },
   {
     timestamps: true,
@@ -56,6 +62,4 @@ export const updateContactSchema = Joi.object({
   contactType: Joi.string().valid("work", "home", "personal"),
 });
 
-const Contact = mongoose.model("contact", contactSchema);
-
-export default Contact;
+export default mongoose.model("contacts", contactSchema);
