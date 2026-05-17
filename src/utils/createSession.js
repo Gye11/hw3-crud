@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import SessionCollection from "../db/models/Session.js";
+import SessionCollection from "../db/models/session.js";
 
 export const createSession = async (userId) => {
   await SessionCollection.deleteOne({ userId });
