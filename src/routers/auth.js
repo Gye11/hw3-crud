@@ -7,7 +7,7 @@ import {
   registerUserController,
 } from "../controllers/auth.js";
 
-import { validateBody } from "../middlewares/validateBody.js";
+import validateBody from "../middlewares/validateBody.js";
 
 import { registerUserSchema, loginUserSchema } from "../validation/auth.js";
 
