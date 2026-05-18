@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import createHttpError from "http-errors";
 import jwt from "jsonwebtoken";
 
-import UserCollection from "../db/models/user.js";
+import { UserCollection } from "../db/models/user.js";
 import { SessionCollection } from "../db/models/session.js";
 import { createSession } from "../utils/createSession.js";
 
