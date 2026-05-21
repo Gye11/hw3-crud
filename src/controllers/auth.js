@@ -1,9 +1,18 @@
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+import createHttpError from "http-errors";
+
 import {
   loginUser,
   logoutUser,
   refreshUsersSession,
   registerUser,
 } from "../services/auth.js";
+
+import { UserCollection } from "../db/models/user.js";
+import { SessionCollection } from "../db/models/session.js";
+
+import { sendMail } from "../utils/sendMail.js";
 
 const setupSession = (res, session) => {
   res.cookie("refreshToken", session.refreshToken, {
@@ -64,4 +73,81 @@ export const logoutUserController = async (req, res) => {
   res.clearCookie("refreshToken");
 
   res.status(204).send();
+};
+
+export const sendResetEmailController = async (req, res) => {
+  const email = req.body.email.trim().toLowerCase();
+
+  const user = await UserCollection.findOne({
+    email: email.trim().toLowerCase(),
+  });
+
+  console.log(user);
+
+  if (!user) {
+    throw createHttpError(404, "User not found");
+  }
+
+  const resetToken = jwt.sign(
+    {
+      email,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "5m",
+    },
+  );
+
+  const resetLink = `${process.env.APP_DOMAIN}/reset-password?token=${resetToken}`;
+
+  await sendMail({
+    to: email,
+    subject: "Reset your password",
+    html: `
+      <h2>Password reset</h2>
+      <a href="${resetLink}">${resetLink}</a>
+    `,
+  });
+
+  res.json({
+    status: 200,
+    message: "Reset password email has been successfully sent.",
+    data: {},
+  });
+};
+
+export const resetPasswordController = async (req, res) => {
+  const { token, password } = req.body;
+
+  let decodedToken;
+
+  try {
+    decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+  } catch (error) {
+    throw createHttpError(401, "Token is expired or invalid.");
+  }
+
+  const user = await UserCollection.findOne({
+    email: decodedToken.email,
+  });
+
+  if (!user) {
+    throw createHttpError(404, "User not found.");
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  await UserCollection.findByIdAndUpdate(user._id, {
+    password: hashedPassword,
+  });
+
+  await SessionCollection.deleteMany({
+    userId: user._id,
+  });
+
+  res.json({
+    status: 200,
+    message: "Password has been successfully reset.",
+    data: {},
+  });
 };

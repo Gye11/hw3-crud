@@ -1,5 +1,7 @@
 import createHttpError from "http-errors";
 
+import cloudinary from "../utils/cloudinary.js";
+
 import {
   getAllContacts,
   getContactById,
@@ -67,9 +69,18 @@ export const getContactByIdController = async (req, res) => {
 export const createContactController = async (req, res) => {
   const userId = req.user._id;
 
+  let photo;
+
+  if (req.file) {
+    const result = await cloudinary.uploader.upload(req.file.path);
+
+    photo = result.secure_url;
+  }
+
   const newContact = await createContact({
     ...req.body,
     userId,
+    photo,
   });
 
   res.status(201).json({
@@ -84,7 +95,22 @@ export const updateContactController = async (req, res) => {
 
   const userId = req.user._id;
 
-  const updatedContact = await updateContact(contactId, req.body, userId);
+  let photo;
+
+  if (req.file) {
+    const result = await cloudinary.uploader.upload(req.file.path);
+
+    photo = result.secure_url;
+  }
+
+  const updatedContact = await updateContact(
+    contactId,
+    {
+      ...req.body,
+      ...(photo && { photo }),
+    },
+    userId,
+  );
 
   if (!updatedContact) {
     throw createHttpError(404, "Contact not found");

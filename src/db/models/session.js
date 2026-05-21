@@ -1,9 +1,9 @@
-import { Schema, model } from "mongoose";
+import mongoose from "mongoose";
 
-const sessionSchema = new Schema(
+const sessionSchema = new mongoose.Schema(
   {
     userId: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "users",
       required: true,
     },
@@ -34,4 +34,4 @@ const sessionSchema = new Schema(
   },
 );
 
-export const SessionCollection = model("sessions", sessionSchema);
+export const SessionCollection = mongoose.model("sessions", sessionSchema);

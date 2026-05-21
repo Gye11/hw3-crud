@@ -34,6 +34,10 @@ const contactSchema = new mongoose.Schema(
       default: "personal",
     },
 
+    photo: {
+      type: String,
+    },
+
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
