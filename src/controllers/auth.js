@@ -79,10 +79,8 @@ export const sendResetEmailController = async (req, res) => {
   const email = req.body.email.trim().toLowerCase();
 
   const user = await UserCollection.findOne({
-    email: email.trim().toLowerCase(),
+    email,
   });
-
-  console.log(user);
 
   if (!user) {
     throw createHttpError(404, "User not found");
@@ -100,14 +98,21 @@ export const sendResetEmailController = async (req, res) => {
 
   const resetLink = `${process.env.APP_DOMAIN}/reset-password?token=${resetToken}`;
 
-  await sendMail({
-    to: email,
-    subject: "Reset your password",
-    html: `
-      <h2>Password reset</h2>
-      <a href="${resetLink}">${resetLink}</a>
-    `,
-  });
+  try {
+    await sendMail({
+      to: email,
+      subject: "Reset your password",
+      html: `
+        <h2>Password reset</h2>
+        <a href="${resetLink}">${resetLink}</a>
+      `,
+    });
+  } catch (error) {
+    throw createHttpError(
+      500,
+      "Failed to send the email, please try again later.",
+    );
+  }
 
   res.json({
     status: 200,
