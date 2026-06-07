@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.0.3
 
 info:
   title: Contacts API
@@ -16,70 +16,72 @@ tags:
   - name: Auth
     description: Authentication endpoints
 
-paths:
-  /contacts:
-    get:
-      $ref: ../swagger/paths/contacts/get.yaml
+    tags:
+  - Contacts
 
-    post:
-      $ref: ../swagger/paths/contacts/post.yaml
+summary: Get contact by id
+operationId: getContactById
 
-  /contacts/{contactId}:
-    get:
-      $ref: ../swagger/paths/contacts/{contactId}/get.yaml
+description: Get single contact
 
-    patch:
-      $ref: ../swagger/paths/contacts/{contactId}/patch.yaml
+security:
+  - bearerAuth: []
 
-    delete:
-      $ref: ../swagger/paths/contacts/{contactId}/delete.yaml
+parameters:
+  - in: path
+    name: contactId
+    required: true
+    description: Contact id
+    schema:
+      type: string
+      example: 685f8a123456789
 
-  /auth/register:
-    post:
-      $ref: ../swagger/paths/auth/register.yaml
+responses:
+  "200":
+    description: Successfully found contact
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
 
-  /auth/login:
-    post:
-      $ref: ../swagger/paths/auth/login.yaml
+            message:
+              type: string
+              example: Successfully found contact!
 
-  /auth/logout:
-    post:
-      $ref: ../swagger/paths/auth/logout.yaml
+            data:
+              type: object
+              properties:
+                _id:
+                  type: string
+                  example: 685f8a123456789
+                name:
+                  type: string
+                  example: John Doe
+                phoneNumber:
+                  type: string
+                  example: "+123456789"
+                email:
+                  type: string
+                  example: john@example.com
+                isFavourite:
+                  type: boolean
+                  example: false
+                contactType:
+                  type: string
+                  example: work
+                photo:
+                  type: string
+                  example: https://example.com/photo.jpg
 
-components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
+  "401":
+    description: Unauthorized
 
-  schemas:
-    Contact:
-      type: object
-      properties:
-        _id:
-          type: string
-          example: 685f8a123456789
+  "404":
+    description: Contact not found
 
-        name:
-          type: string
-          example: John Doe
-
-        phoneNumber:
-          type: string
-          example: "+123456789"
-
-        email:
-          type: string
-          example: john@example.com
-
-        isFavourite:
-          type: boolean
-          example: false
-
-        contactType:
-          type: string
-          example: work
-
-        photo:
-          type: string
-          example: https://example.com/photo.jpg
+  "500":
+    description: Server error

@@ -38,6 +38,20 @@ parameters:
       type: string
       example: asc
 
+  - in: query
+    name: isFavourite
+    description: Filter by favourite
+    schema:
+      type: boolean
+      example: true
+
+  - in: query
+    name: contactType
+    description: Filter by contact type
+    schema:
+      type: string
+      example: personal
+
 responses:
   "200":
     description: Successfully found contacts
@@ -57,7 +71,7 @@ responses:
             data:
               type: array
               items:
-                type: object
+                $ref: "#/components/schemas/Contact"
 
   "401":
     description: Unauthorized
