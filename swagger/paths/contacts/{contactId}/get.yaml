@@ -35,7 +35,7 @@ responses:
               example: Successfully found contact!
 
             data:
-              type: object
+              $ref: "#/components/schemas/Contact"
 
   "401":
     description: Unauthorized
