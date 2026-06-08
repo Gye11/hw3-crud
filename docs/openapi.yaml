@@ -12,76 +12,64 @@ servers:
 tags:
   - name: Contacts
     description: Contacts endpoints
-
   - name: Auth
     description: Authentication endpoints
 
-    tags:
-  - Contacts
+paths:
+  /contacts:
+    get:
+      $ref: ../swagger/paths/contacts/get.yaml
+    post:
+      $ref: ../swagger/paths/contacts/post.yaml
 
-summary: Get contact by id
-operationId: getContactById
+  /contacts/{contactId}:
+    get:
+      $ref: ../swagger/paths/contacts/{contactId}/get.yaml
+    patch:
+      $ref: ../swagger/paths/contacts/{contactId}/patch.yaml
+    delete:
+      $ref: ../swagger/paths/contacts/{contactId}/delete.yaml
 
-description: Get single contact
+  /auth/register:
+    post:
+      $ref: ../swagger/paths/auth/register.yaml
 
-security:
-  - bearerAuth: []
+  /auth/login:
+    post:
+      $ref: ../swagger/paths/auth/login.yaml
 
-parameters:
-  - in: path
-    name: contactId
-    required: true
-    description: Contact id
-    schema:
-      type: string
-      example: 685f8a123456789
+  /auth/logout:
+    post:
+      $ref: ../swagger/paths/auth/logout.yaml
 
-responses:
-  "200":
-    description: Successfully found contact
-    content:
-      application/json:
-        schema:
-          type: object
-          properties:
-            status:
-              type: integer
-              example: 200
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
 
-            message:
-              type: string
-              example: Successfully found contact!
-
-            data:
-              type: object
-              properties:
-                _id:
-                  type: string
-                  example: 685f8a123456789
-                name:
-                  type: string
-                  example: John Doe
-                phoneNumber:
-                  type: string
-                  example: "+123456789"
-                email:
-                  type: string
-                  example: john@example.com
-                isFavourite:
-                  type: boolean
-                  example: false
-                contactType:
-                  type: string
-                  example: work
-                photo:
-                  type: string
-                  example: https://example.com/photo.jpg
-
-  "401":
-    description: Unauthorized
-
-  "404":
-    description: Contact not found
-
-  "500":
-    description: Server error
+  schemas:
+    Contact:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 685f8a123456789
+        name:
+          type: string
+          example: John Doe
+        phoneNumber:
+          type: string
+          example: "+123456789"
+        email:
+          type: string
+          example: john@example.com
+        isFavourite:
+          type: boolean
+          example: false
+        contactType:
+          type: string
+          example: work
+        photo:
+          type: string
+          example: https://example.com/photo.jpg

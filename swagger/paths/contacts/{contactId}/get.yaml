@@ -35,7 +35,7 @@ responses:
               example: Successfully found contact!
 
             data:
-              $ref: "#/components/schemas/Contact"
+              $ref: "../../../../docs/openapi.yaml#/components/schemas/Contact"
 
   "401":
     description: Unauthorized
