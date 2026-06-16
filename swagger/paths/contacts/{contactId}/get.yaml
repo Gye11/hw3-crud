@@ -1,0 +1,47 @@
+tags:
+  - Contacts
+
+summary: Get contact by id
+operationId: getContactById
+
+description: Get single contact
+
+security:
+  - bearerAuth: []
+
+parameters:
+  - in: path
+    name: contactId
+    required: true
+    description: Contact id
+    schema:
+      type: string
+      example: 685f8a123456789
+
+responses:
+  "200":
+    description: Successfully found contact
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+
+            message:
+              type: string
+              example: Successfully found contact!
+
+            data:
+              $ref: "../../../../docs/openapi.yaml#/components/schemas/Contact"
+
+  "401":
+    description: Unauthorized
+
+  "404":
+    description: Contact not found
+
+  "500":
+    description: Server error

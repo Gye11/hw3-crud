@@ -1,0 +1,11 @@
+tags:
+  - Auth
+
+summary: Logout user
+operationId: logoutUser
+
+description: Logout current user
+
+responses:
+  "204":
+    description: Successfully logged out
